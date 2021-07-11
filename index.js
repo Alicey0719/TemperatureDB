@@ -1,5 +1,7 @@
     const express = require('express');
     const Sequelize = require('sequelize');
+    const fs = require("fs");
+
     let DB_INFO = "postgres://tmp:TokiwaKanoWayo@postgres:5432/tmp";
     // docker-compose書き換え後、docker-compose down --rmiしないと反映されない!!!
 
@@ -22,14 +24,13 @@
     app.set("view engine", "ejs");
     app.use("/public", express.static(__dirname + "/public"));
 
-    const Messages = sequelize.define('tmp', {
+    const Tmps = sequelize.define('tmp', {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
             primaryKey: true
         },
-        message: Sequelize.TEXT,
-        date: Sequelize.TEXT
+        tmp: Sequelize.FLOAT
     }, {
         // timestamps: false,      // disable the default timestamps
         freezeTableName: true // stick to the table name we define
@@ -63,24 +64,17 @@
         //         });
         // });
         app.post('/tmp', (req, res) => {
-            let fs = require("fs");
-            fs.appendFile("log.txt", req.body.value1, (err) => {
+            fs.appendFile("log.txt", req.body.tmp + ',', (err) => {
                 if (err) throw err;
                 console.log('正常に書き込みが完了しました');
             });
-            console.log(req);
             res.send("ok");
-            // let newMessage = new Messages({
-            //     message: req.body.text,
-            //     date: req.body.dates
-            // });
-            // newMessage.save()
-            //     .then((mes) => {
-            //         res.render('add.ejs');
-            //     })
-            //     .catch((mes) => {
-            //         res.send("error");
-            //     });
+
+            let newTmp = new Tmps({
+                tmp: req.body.tmp
+            });
+
+            newTmp.save()
         });
 
         app.get('/view', (req, res) => {
