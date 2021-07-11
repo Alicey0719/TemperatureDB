@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Todo App</title>
+</head>
+
+<body>
+    <h1>Todo List</h1>
+    <p>
+        <a href="./">Topに戻る</a>
+    </p>
+    <p>予定日　｜　内容</p>
+    <%for (let i = 0; i < messages.length; i++) {%>
+        <p>
+            <%= messages[i].date %>
+                <%= messages[i].message %>
+        </p>
+        <%}%>
+</body>
+
+</html>
