@@ -32,6 +32,7 @@
             autoIncrement: true,
             primaryKey: true
         },
+        name: Sequelize.STRING,
         temp: Sequelize.FLOAT,
         hum: Sequelize.FLOAT
     }, {
@@ -49,22 +50,7 @@
         app.get('/', (req, res) => {
             res.render('top.ejs');
         });
-        // app.get('/add', (req, res) => {
-        //     res.render('add.ejs');
-        // });
-        // app.post('/add', (req, res) => {
-        //     let newMessage = new Messages({
-        //         message: req.body.text,
-        //         date: req.body.date
-        //     });
-        //     newMessage.save()
-        //         .then((mes) => {
-        //             res.render('add.ejs');
-        //         })
-        //         .catch((mes) => {
-        //             res.send("error");
-        //         });
-        // });
+
         app.post('/temp', (req, res) => {
             fs.appendFile("log.txt", req.body.temp + ',', (err) => {
                 if (err) throw err;
@@ -73,6 +59,7 @@
             res.send("ok");
 
             let newTemp = new Temps({
+                name: req.body.name,
                 temp: req.body.temp,
                 hum: req.body.hum
             });
@@ -81,12 +68,12 @@
         });
 
         app.get('/view', (req, res) => {
-            Messages.findAll()
+            Temps.findAll()
                 .then((result) => {
-                    let allMessages = result.map((e) => {
+                    let allTemps = result.map((e) => {
                         return e;
                     });
-                    res.render('view.ejs', { messages: allMessages });
+                    res.render('view.ejs', { temps: allTemps });
                 });
         });
 
