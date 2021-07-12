@@ -16,11 +16,11 @@ services:
     command: npm start
   postgres:
     image: postgres:12
-    container_name: tmp_db
+    container_name: temp_db
     restart: always
     environment:
       TZ: "Asia/Tokyo"
-      POSTGRES_USER: tmp
+      POSTGRES_USER: temp
       POSTGRES_PASSWORD: TokiwaKanoWayo
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
     ports:

@@ -1,5 +1,5 @@
 {
-    "name": "tmp_system",
+    "name": "temp_system",
     "version": "1.0.0",
     "description": "Node.js on Docker with Express and EJS",
     "author": "me",

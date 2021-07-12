@@ -1,8 +1,10 @@
     const express = require('express');
     const Sequelize = require('sequelize');
     const fs = require("fs");
+    const { Z_HUFFMAN_ONLY } = require('zlib');
+    const { runInNewContext } = require('vm');
 
-    let DB_INFO = "postgres://tmp:TokiwaKanoWayo@postgres:5432/tmp";
+    let DB_INFO = "postgres://temp:TokiwaKanoWayo@postgres:5432/temp";
     // docker-compose書き換え後、docker-compose down --rmiしないと反映されない!!!
 
     let pg_option = {};
@@ -24,16 +26,16 @@
     app.set("view engine", "ejs");
     app.use("/public", express.static(__dirname + "/public"));
 
-    const Tmps = sequelize.define('tmp', {
+    const Temps = sequelize.define('temp', {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
             primaryKey: true
         },
-        tmp: Sequelize.FLOAT
+        temp: Sequelize.FLOAT,
+        hum: Sequelize.FLOAT
     }, {
-        // timestamps: false,      // disable the default timestamps
-        freezeTableName: true // stick to the table name we define
+        freezeTableName: true
     });
 
     sequelize.sync({ force: false, alter: true })
@@ -63,18 +65,19 @@
         //             res.send("error");
         //         });
         // });
-        app.post('/tmp', (req, res) => {
-            fs.appendFile("log.txt", req.body.tmp + ',', (err) => {
+        app.post('/temp', (req, res) => {
+            fs.appendFile("log.txt", req.body.temp + ',', (err) => {
                 if (err) throw err;
                 console.log('正常に書き込みが完了しました');
             });
             res.send("ok");
 
-            let newTmp = new Tmps({
-                tmp: req.body.tmp
+            let newTemp = new Temps({
+                temp: req.body.temp,
+                hum: req.body.hum
             });
 
-            newTmp.save()
+            newTemp.save()
         });
 
         app.get('/view', (req, res) => {
